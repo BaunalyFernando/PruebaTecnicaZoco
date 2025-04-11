@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaZoco.Services.UserService;
 using PruebaTecnicaZoco.Services.UserService.UserDTO;
 
@@ -30,6 +31,7 @@ namespace PruebaTecnicaZoco.Controllers
         }
 
         [HttpGet("ObtenerUsuarioPorId")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
             try
@@ -61,7 +63,23 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
+        [HttpPost("CrearUsuarioPorAdmin")]
+        [Authorize]
+        public IActionResult CreateUserByAdmin([FromBody] UserAdminDTO user)
+        {
+            try
+            {
+                var createdUser = _userService.CreateUserByAdmin(user);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("UpdateUser")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] UserToModifyDTO user)
         {
             try
@@ -80,6 +98,7 @@ namespace PruebaTecnicaZoco.Controllers
         }
 
         [HttpDelete("DeleteUser")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromBody] int id)
         {
             try
