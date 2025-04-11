@@ -18,10 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\PruebaTecnicaZoco.Services\PruebaTecnicaZoco.Services.csproj" />
   </ItemGroup>
 
 </Project>
