@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Services", "PruebaTecnicaZoco.Services\PruebaTecnicaZoco.Services.csproj", "{D9B8056E-28FE-446A-B955-3B1DEFE16883}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Repository", "PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj", "{F41038C7-56C0-4222-8C43-589A717A7CF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9B8056E-28FE-446A-B955-3B1DEFE16883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9B8056E-28FE-446A-B955-3B1DEFE16883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9B8056E-28FE-446A-B955-3B1DEFE16883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9B8056E-28FE-446A-B955-3B1DEFE16883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
