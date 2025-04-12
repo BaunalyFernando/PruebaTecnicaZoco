@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PruebaTecnicaZoco.Repository;
+using PruebaTecnicaZoco.Services.StudyService;
 using PruebaTecnicaZoco.Services.UserService;
 using System.Text;
 
@@ -18,6 +19,7 @@ keyBytes = Encoding.UTF8.GetBytes(jwtKey);
 var securityKey = new SymmetricSecurityKey(keyBytes);
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IStudyService, StudyService>();
 
 builder.Services.AddAuthentication(options =>
 {

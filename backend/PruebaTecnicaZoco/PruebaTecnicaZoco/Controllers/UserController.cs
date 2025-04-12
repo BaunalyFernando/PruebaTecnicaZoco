@@ -16,7 +16,7 @@ namespace PruebaTecnicaZoco.Controllers
             _userService = userService;
         }
 
-        [HttpPost("CrearUsuario")]
+        [HttpPost("CreateUser")]
         public IActionResult CreateUser([FromBody] UserNormalDTO user)
         {
             try
@@ -30,7 +30,7 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
-        [HttpGet("ObtenerUsuarioPorId")]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -49,7 +49,7 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
-        [HttpGet("ObtenerTodosLosUsuarios")]
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -63,7 +63,7 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
-        [HttpPost("CrearUsuarioPorAdmin")]
+        [HttpPost("CreateUserByAdmin")]
         [Authorize]
         public IActionResult CreateUserByAdmin([FromBody] UserAdminDTO user)
         {
@@ -78,12 +78,16 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
-        [HttpPut("UpdateUser")]
+        [HttpPut]
         [Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] UserToModifyDTO user)
         {
             try
             {
+                if (user.Id <= 0)
+                {
+                    return BadRequest("El ID del usuario no es válido.");
+                }
                 var updatedUser = await _userService.UpdateUserAsync(user);
                 if (updatedUser == null)
                 {
@@ -97,17 +101,18 @@ namespace PruebaTecnicaZoco.Controllers
             }
         }
 
-        [HttpDelete("DeleteUser")]
+        [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteUser([FromBody] int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             try
             {
                 var result = await _userService.DeleteUserAsync(id);
                 if (!result)
                 {
-                    return NotFound();
+                    return NotFound("No se encontró el usuario a eliminar.");
                 }
+
                 return NoContent();
             }
             catch (Exception ex)

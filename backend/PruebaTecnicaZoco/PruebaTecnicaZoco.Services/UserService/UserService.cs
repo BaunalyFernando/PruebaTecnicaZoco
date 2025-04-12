@@ -13,7 +13,7 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             _context = context;
         }
-        public User CreateUser(UserNormalDTO user)
+        public async Task<User> CreateUser(UserNormalDTO user)
         {
           
             if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
@@ -31,12 +31,12 @@ namespace PruebaTecnicaZoco.Services.UserService
             };
 
             _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return newUser;
         }
 
-        public User CreateUserByAdmin(UserAdminDTO user)
+        public async Task<User> CreateUserByAdmin(UserAdminDTO user)
         {
             if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
@@ -53,7 +53,7 @@ namespace PruebaTecnicaZoco.Services.UserService
             };
 
             _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return newUser;
         }
