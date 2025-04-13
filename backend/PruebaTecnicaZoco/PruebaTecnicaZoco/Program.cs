@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PruebaTecnicaZoco.Repository;
+using PruebaTecnicaZoco.Services.AddressService;
 using PruebaTecnicaZoco.Services.StudyService;
 using PruebaTecnicaZoco.Services.UserService;
 using System.Text;
@@ -20,6 +21,7 @@ var securityKey = new SymmetricSecurityKey(keyBytes);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudyService, StudyService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 
 builder.Services.AddAuthentication(options =>
 {

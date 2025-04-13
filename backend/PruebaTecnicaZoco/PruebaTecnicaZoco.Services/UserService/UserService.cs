@@ -18,7 +18,7 @@ namespace PruebaTecnicaZoco.Services.UserService
           
             if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
-                throw new ArgumentException("Por favor ingrese todos los datos de los campos");
+                throw new InvalidOperationException("Por favor ingrese todos los datos de los campos");
             }
 
             var newUser = new User
