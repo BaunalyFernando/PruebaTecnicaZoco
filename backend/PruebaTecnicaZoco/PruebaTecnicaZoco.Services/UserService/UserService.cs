@@ -1,18 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using PruebaTecnicaZoco.Common.Exceptions;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Users;
 using PruebaTecnicaZoco.Services.UserService.UserDTO;
+using System.Security.Claims;
 
 namespace PruebaTecnicaZoco.Services.UserService
 {
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<User> CreateUser(UserNormalDTO user)
@@ -68,14 +72,21 @@ namespace PruebaTecnicaZoco.Services.UserService
             var user = await _context.Users.FindAsync(id);
             if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
+            if (!IsAdmin() && user.Id != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para eliminar este perfil.");
+
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return true;
         }
 
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
+            if (!IsAdmin())
+                throw new UnauthorizedAccessException("Solo los administradores pueden ver todos los usuarios.");
+
             return await _context.Users.ToListAsync();
         }
 
@@ -86,6 +97,9 @@ namespace PruebaTecnicaZoco.Services.UserService
             var user = await _context.Users.FindAsync(id);
             if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
+            if (!IsAdmin() && user.Id != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para acceder a este perfil.");
+
             return user;
         }
 
@@ -93,7 +107,11 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             if (user == null) throw new BadRequestException("Por favor ingrese un usuario válido");
 
-            var existingUser = await GetUserByIdAsync(user.Id);
+            var existingUser = await _context.Users.FindAsync(user.Id);
+            if (existingUser == null) throw new NotFoundException("Usuario no encontrado");
+
+            if (!IsAdmin() && existingUser.Id != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para editar este perfil.");
 
             existingUser.Nombre = user.Nombre;
             existingUser.Apellido = user.Apellido;
@@ -105,5 +123,16 @@ namespace PruebaTecnicaZoco.Services.UserService
 
             return existingUser;
         }
+
+        private int GetCurrentUserId()
+        {
+            return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        }
+
+        private bool IsAdmin()
+        {
+            return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
+        }
+
     }
 }

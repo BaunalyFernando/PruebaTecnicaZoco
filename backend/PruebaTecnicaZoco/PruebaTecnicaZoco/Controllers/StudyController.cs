@@ -26,7 +26,7 @@ namespace PruebaTecnicaZoco.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllStudies()
         {
             var studies = await _studyService.GetAllStudiesAsync();

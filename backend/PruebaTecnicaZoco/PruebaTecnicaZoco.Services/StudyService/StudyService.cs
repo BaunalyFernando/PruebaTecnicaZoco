@@ -1,20 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using PruebaTecnicaZoco.Common.Exceptions;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Studies;
 using PruebaTecnicaZoco.Services.StudyService.StudiesDto;
 using PruebaTecnicaZoco.Services.StudyService.StudiesDTO;
+using System.Security.Claims;
 
 namespace PruebaTecnicaZoco.Services.StudyService
 {
     public class StudyService : IStudyService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppDbContext _context;
 
-        public StudyService(AppDbContext context)
+        public StudyService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
+
 
         public async Task<Study> CreateStudyAsync(StudyDTO study)
         {
@@ -62,6 +67,9 @@ namespace PruebaTecnicaZoco.Services.StudyService
             if (study == null)
                 throw new NotFoundException("No se encontró el estudio con el id proporcionado");
 
+            if (!IsAdmin() && study.UserId != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para acceder a este estudio.");
+
             return study;
         }
 
@@ -78,6 +86,16 @@ namespace PruebaTecnicaZoco.Services.StudyService
             _context.Studies.Update(existingStudy);
             await _context.SaveChangesAsync();
             return existingStudy;
+        }
+
+        private int GetCurrentUserId()
+        {
+            return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        }
+
+        private bool IsAdmin()
+        {
+            return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
         }
     }
 }

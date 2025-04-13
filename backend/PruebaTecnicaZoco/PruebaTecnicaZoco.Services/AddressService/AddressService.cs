@@ -3,16 +3,21 @@ using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Addresses;
 using PruebaTecnicaZoco.Services.AddressService.AddressesDTO;
 using PruebaTecnicaZoco.Common.Exceptions;
+using Microsoft.AspNetCore.Http;
+using PruebaTecnicaZoco.Repository.Studies;
+using System.Security.Claims;
 
 namespace PruebaTecnicaZoco.Services.AddressService
 {
     public class AddressService : IAddressService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppDbContext _context;
 
-        public AddressService(AppDbContext context)
+        public AddressService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Address> CreateAddressAsync(AddressDTO address)
@@ -52,7 +57,13 @@ namespace PruebaTecnicaZoco.Services.AddressService
 
         public async Task<IEnumerable<Address>> GetAllAddressesAsync()
         {
-            return await _context.Addresses.ToListAsync();
+            if (IsAdmin())
+            {
+                return await _context.Addresses.ToListAsync();
+            }
+
+            var userId = GetCurrentUserId();
+            return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
         }
 
         public async Task<Address> GetAddressByIdAsync(int id)
@@ -63,6 +74,9 @@ namespace PruebaTecnicaZoco.Services.AddressService
             var address = await _context.Addresses.FindAsync(id);
             if (address == null)
                 throw new NotFoundException("Dirección no encontrada.");
+
+            if (!IsAdmin() && address.UserId != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para acceder a este estudio.");
 
             return address;
         }
@@ -76,6 +90,10 @@ namespace PruebaTecnicaZoco.Services.AddressService
             if (existingAddress == null)
                 throw new NotFoundException("Dirección no encontrada.");
 
+           
+            if (!IsAdmin() && existingAddress.UserId != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para modificar esta dirección.");
+
             existingAddress.Calle = address.Calle;
             existingAddress.Numero = address.Numero;
             existingAddress.Ciudad = address.Ciudad;
@@ -84,6 +102,16 @@ namespace PruebaTecnicaZoco.Services.AddressService
             await _context.SaveChangesAsync();
 
             return existingAddress;
+        }
+
+        private int GetCurrentUserId()
+        {
+            return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        }
+
+        private bool IsAdmin()
+        {
+            return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
         }
     }
 }
