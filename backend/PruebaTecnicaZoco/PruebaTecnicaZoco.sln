@@ -3,16 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco", "PruebaTecnicaZoco\PruebaTecnicaZoco.csproj", "{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaTecnicaZoco", "PruebaTecnicaZoco\PruebaTecnicaZoco.csproj", "{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{436AA1CA-BE44-47C2-AC96-869389DCD1DD}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Services", "PruebaTecnicaZoco.Services\PruebaTecnicaZoco.Services.csproj", "{D9B8056E-28FE-446A-B955-3B1DEFE16883}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaTecnicaZoco.Services", "PruebaTecnicaZoco.Services\PruebaTecnicaZoco.Services.csproj", "{D9B8056E-28FE-446A-B955-3B1DEFE16883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Repository", "PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj", "{F41038C7-56C0-4222-8C43-589A717A7CF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaTecnicaZoco.Repository", "PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj", "{F41038C7-56C0-4222-8C43-589A717A7CF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Common", "PruebaTecnicaZoco.Common\PruebaTecnicaZoco.Common.csproj", "{EEECAE78-430F-4B24-A39C-C47F0F78D918}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41038C7-56C0-4222-8C43-589A717A7CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

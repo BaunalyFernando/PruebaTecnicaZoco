@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PruebaTecnicaZoco.Common.Exceptions;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Users;
 using PruebaTecnicaZoco.Services.UserService.UserDTO;
@@ -13,12 +14,13 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             _context = context;
         }
+
         public async Task<User> CreateUser(UserNormalDTO user)
         {
-          
-            if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) ||
+                string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
-                throw new InvalidOperationException("Por favor ingrese todos los datos de los campos");
+                throw new BadRequestException("Por favor ingrese todos los datos de los campos");
             }
 
             var newUser = new User
@@ -38,9 +40,10 @@ namespace PruebaTecnicaZoco.Services.UserService
 
         public async Task<User> CreateUserByAdmin(UserAdminDTO user)
         {
-            if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.Nombre) || string.IsNullOrEmpty(user.Apellido) ||
+                string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
-                throw new ArgumentException("Por favor ingrese todos los datos de los campos");
+                throw new BadRequestException("Por favor ingrese todos los datos de los campos");
             }
 
             var newUser = new User
@@ -60,11 +63,10 @@ namespace PruebaTecnicaZoco.Services.UserService
 
         public async Task<bool> DeleteUserAsync(int id)
         {
-            if (id <= 0) throw new ArgumentException("Por favor ingrese un ID válido");
+            if (id <= 0) throw new BadRequestException("Por favor ingrese un ID válido");
 
             var user = await _context.Users.FindAsync(id);
-
-            if (user == null) throw new ArgumentException("No se ha encontrado el usuario");
+            if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
@@ -79,35 +81,19 @@ namespace PruebaTecnicaZoco.Services.UserService
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Por favor ingrese un ID valido");
-            }
+            if (id <= 0) throw new BadRequestException("Por favor ingrese un ID válido");
 
             var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
-                throw new ArgumentException("No se ha encontrado el usuario");
-            }
+            if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
             return user;
         }
 
         public async Task<User> UpdateUserAsync(UserToModifyDTO user)
         {
-            if(user == null)
-            {
-                throw new ArgumentException("Por favor ingrese un usuario valido");
-            }
+            if (user == null) throw new BadRequestException("Por favor ingrese un usuario válido");
 
             var existingUser = await GetUserByIdAsync(user.Id);
-
-            if (existingUser == null)
-            {
-                throw new ArgumentException("No se ha encontrado el usuario");
-            }
-
 
             existingUser.Nombre = user.Nombre;
             existingUser.Apellido = user.Apellido;

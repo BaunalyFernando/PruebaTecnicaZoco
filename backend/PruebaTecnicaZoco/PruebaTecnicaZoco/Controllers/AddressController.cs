@@ -58,7 +58,6 @@ namespace PruebaTecnicaZoco.Controllers
             try
             {
                 var address = await _addressService.GetAddressByIdAsync(id);
-                
                 return Ok(address);
             }
             catch (Exception ex)
@@ -66,6 +65,7 @@ namespace PruebaTecnicaZoco.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteAddress(int id)
@@ -73,7 +73,6 @@ namespace PruebaTecnicaZoco.Controllers
             try
             {
                 var result = await _addressService.DeleteAddressAsync(id);
-               
                 return NoContent();
             }
             catch (Exception ex)

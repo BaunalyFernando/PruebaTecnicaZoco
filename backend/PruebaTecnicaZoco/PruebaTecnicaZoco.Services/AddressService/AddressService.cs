@@ -2,7 +2,7 @@
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Addresses;
 using PruebaTecnicaZoco.Services.AddressService.AddressesDTO;
-using System.Net;
+using PruebaTecnicaZoco.Common.Exceptions;
 
 namespace PruebaTecnicaZoco.Services.AddressService
 {
@@ -18,15 +18,11 @@ namespace PruebaTecnicaZoco.Services.AddressService
         public async Task<Address> CreateAddressAsync(AddressDTO address)
         {
             if (string.IsNullOrEmpty(address.Calle) || string.IsNullOrEmpty(address.Numero) || string.IsNullOrEmpty(address.Ciudad))
-            {
-                throw new InvalidOperationException("Por favor ingrese todos los datos de los campos");
-            }
+                throw new BadRequestException("Por favor ingrese todos los datos de los campos");
 
             var userExists = await _context.Users.AnyAsync(u => u.Id == address.UserId);
             if (!userExists)
-            {
-                throw new InvalidOperationException("El usuario no existe.");
-            }
+                throw new NotFoundException("El usuario no existe.");
 
             var newAddress = new Address
             {
@@ -45,9 +41,7 @@ namespace PruebaTecnicaZoco.Services.AddressService
         public async Task<bool> DeleteAddressAsync(int id)
         {
             if (id <= 0)
-            {
-                throw new InvalidOperationException("El id no puede ser menor o igual a 0");
-            }
+                throw new BadRequestException("El id no puede ser menor o igual a 0");
 
             var address = await GetAddressByIdAsync(id);
 
@@ -64,15 +58,11 @@ namespace PruebaTecnicaZoco.Services.AddressService
         public async Task<Address> GetAddressByIdAsync(int id)
         {
             if (id <= 0)
-            {
-                throw new ArgumentException("El ID debe ser mayor que cero.");
-            }
+                throw new BadRequestException("El ID debe ser mayor que cero.");
 
             var address = await _context.Addresses.FindAsync(id);
             if (address == null)
-            {
-                throw new KeyNotFoundException("Dirección no encontrada.");
-            }
+                throw new NotFoundException("Dirección no encontrada.");
 
             return address;
         }
@@ -80,11 +70,11 @@ namespace PruebaTecnicaZoco.Services.AddressService
         public async Task<Address> UpdateAddressAsync(AddressModifyDTO address)
         {
             if (address == null || address.Id <= 0)
-                throw new ArgumentException("Datos de dirección inválidos.");
+                throw new BadRequestException("Datos de dirección inválidos.");
 
             var existingAddress = await _context.Addresses.FindAsync(address.Id);
             if (existingAddress == null)
-                throw new KeyNotFoundException("Dirección no encontrada.");
+                throw new NotFoundException("Dirección no encontrada.");
 
             existingAddress.Calle = address.Calle;
             existingAddress.Numero = address.Numero;
@@ -95,6 +85,5 @@ namespace PruebaTecnicaZoco.Services.AddressService
 
             return existingAddress;
         }
-        
     }
 }

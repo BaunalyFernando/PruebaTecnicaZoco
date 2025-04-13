@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PruebaTecnicaZoco.Common.Exceptions;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.SessionLogs;
 using PruebaTecnicaZoco.Services.LoginService.LoginDTO;
@@ -13,17 +14,20 @@ namespace PruebaTecnicaZoco.Services.LoginService
         {
             _context = context;
         }
+
         public async Task<bool> LoginAsync(SessionLogDTO session)
         {
-            if(session.UserId == 0)
+            if (session.UserId == 0)
             {
-                throw new InvalidOperationException("Por favor ingrese un userId valido");
+                throw new BadRequestException("Por favor ingrese un userId válido.");
             }
+
             var userExists = await _context.Users.AnyAsync(u => u.Id == session.UserId);
             if (!userExists)
             {
-                throw new InvalidOperationException("Usuario no encontrado.");
+                throw new NotFoundException("Usuario no encontrado.");
             }
+
             var activeSession = await _context.SessionLogs
                                 .FirstOrDefaultAsync(s => s.UserId == session.UserId && s.FechaFin == null);
             if (activeSession != null)
@@ -48,12 +52,13 @@ namespace PruebaTecnicaZoco.Services.LoginService
         {
             if (session.UserId == 0)
             {
-                throw new InvalidOperationException("Por favor ingrese un userId valido");
+                throw new BadRequestException("Por favor ingrese un userId válido");
             }
+
             var userExists = await _context.Users.AnyAsync(u => u.Id == session.UserId);
             if (!userExists)
             {
-                throw new InvalidOperationException("Usuario no encontrado.");
+                throw new NotFoundException("Usuario no encontrado.");
             }
 
             var existingSession = await _context.SessionLogs

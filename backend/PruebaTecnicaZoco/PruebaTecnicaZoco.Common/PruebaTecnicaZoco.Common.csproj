@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaZoco.Common\PruebaTecnicaZoco.Common.csproj" />
-    <ProjectReference Include="..\PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
 </Project>

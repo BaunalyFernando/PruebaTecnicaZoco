@@ -17,108 +17,50 @@ namespace PruebaTecnicaZoco.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public IActionResult CreateUser([FromBody] UserNormalDTO user)
+        public async Task<IActionResult> CreateUser([FromBody] UserNormalDTO user)
         {
-            try
-            {
-                var createdUser = _userService.CreateUser(user);
-                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var createdUser = await _userService.CreateUser(user);
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
-            try
-            {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var user = await _userService.GetUserByIdAsync(id);
+            return Ok(user);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-            try
-            {
-                var users = await _userService.GetAllUsersAsync();
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpPost("CreateUserByAdmin")]
-        [Authorize]
-        public IActionResult CreateUserByAdmin([FromBody] UserAdminDTO user)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateUserByAdmin([FromBody] UserAdminDTO user)
         {
-            try
-            {
-                var createdUser = _userService.CreateUserByAdmin(user);
-                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var createdUser = await _userService.CreateUserByAdmin(user);
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
         }
 
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] UserToModifyDTO user)
         {
-            try
-            {
-                if (user.Id <= 0)
-                {
-                    return BadRequest("El ID del usuario no es válido.");
-                }
-                var updatedUser = await _userService.UpdateUserAsync(user);
-                if (updatedUser == null)
-                {
-                    return NotFound();
-                }
-                return Ok(updatedUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var updatedUser = await _userService.UpdateUserAsync(user);
+            return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            try
-            {
-                var result = await _userService.DeleteUserAsync(id);
-                if (!result)
-                {
-                    return NotFound("No se encontró el usuario a eliminar.");
-                }
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _userService.DeleteUserAsync(id);
+            return NoContent();
         }
     }
 }
