@@ -6,7 +6,7 @@ using PruebaTecnicaZoco.Services.UserService.UserDTO;
 namespace PruebaTecnicaZoco.Controllers
 {
     [ApiController]
-    [Route("api/Usuarios")]
+    [Route("api/Users")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

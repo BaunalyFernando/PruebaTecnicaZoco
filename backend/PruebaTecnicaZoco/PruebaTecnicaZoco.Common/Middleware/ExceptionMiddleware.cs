@@ -30,13 +30,16 @@ public class ExceptionMiddleware
 
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var statusCode = exception switch
-        {
-            NotFoundException => HttpStatusCode.NotFound,
-            BadRequestException => HttpStatusCode.BadRequest,
-            UnauthorizedException => HttpStatusCode.Unauthorized,
-            _ => HttpStatusCode.InternalServerError
-        };
+        HttpStatusCode statusCode;
+
+        if (exception is NotFoundException)
+            statusCode = HttpStatusCode.NotFound;
+        else if (exception is BadRequestException)
+            statusCode = HttpStatusCode.BadRequest;
+        else if (exception is UnauthorizedException)
+            statusCode = HttpStatusCode.Unauthorized;
+        else
+            statusCode = HttpStatusCode.InternalServerError;
 
         var result = JsonSerializer.Serialize(new
         {
@@ -48,4 +51,5 @@ public class ExceptionMiddleware
 
         return context.Response.WriteAsync(result);
     }
+
 }

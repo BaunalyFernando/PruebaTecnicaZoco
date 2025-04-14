@@ -8,9 +8,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using PruebaTecnicaZoco.Repository.Users;
+using PruebaTecnicaZoco.Repository.SessionLogs;
+using PruebaTecnicaZoco.Common.Exceptions;
 
 [ApiController]
-[Route("auth/login")]
+[Route("auth/")]
 public class LoginController : ControllerBase
 {
     private readonly IConfiguration _configuration;
@@ -26,34 +28,27 @@ public class LoginController : ControllerBase
         _loginService = loginService;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO request)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
 
         if (user == null)
         {
-            return Unauthorized("Credenciales inválidas.");
+            throw new UnauthorizedException("Credenciales inválidas.");
         }
 
         var token = GenerateToken(user.Id, user.Email, user.Role);
 
-        var sessionLog = new SessionLogDTO
+        var sessionLog = new SessionLog
         {
             UserId = user.Id,
             FechaInicio = DateTime.Now,
             FechaFin = null
         };
 
-        try
-        {
-            await _loginService.LoginAsync(sessionLog);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al registrar la sesión.");
-            return StatusCode(500, "Error al registrar la sesión.");
-        }
+        await _loginService.LoginAsync(sessionLog);
 
         return Ok(new
         {
@@ -64,24 +59,19 @@ public class LoginController : ControllerBase
         });
     }
 
+
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] SessionLogDTO session)
     {
         if (session.UserId == 0)
         {
-            return BadRequest("Por favor ingrese un userId válido");
+            throw new BadRequestException("Por favor ingrese un userId válido");
         }
 
-        try
-        {
-            await _loginService.LogoutAsync(session);
-            return Ok("Sesión cerrada correctamente.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, "Error al cerrar la sesión.");
-        }
+        await _loginService.LogoutAsync(session);
+        return Ok("Sesión cerrada correctamente.");
     }
+
 
     private string GenerateToken(int userId, string email, Role role)
     {

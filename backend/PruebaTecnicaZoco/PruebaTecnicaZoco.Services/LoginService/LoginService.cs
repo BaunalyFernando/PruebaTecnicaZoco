@@ -15,7 +15,7 @@ namespace PruebaTecnicaZoco.Services.LoginService
             _context = context;
         }
 
-        public async Task<bool> LoginAsync(SessionLogDTO session)
+        public async Task<bool> LoginAsync(SessionLog session)
         {
             if (session.UserId == 0)
             {
@@ -66,7 +66,7 @@ namespace PruebaTecnicaZoco.Services.LoginService
 
             if (existingSession == null)
             {
-                throw new InvalidOperationException("No hay una sesión activa para este usuario.");
+                throw new BadRequestException("No hay una sesión activa para este usuario.");
             }
 
             existingSession.FechaFin = DateTime.Now;

@@ -6,7 +6,7 @@ using PruebaTecnicaZoco.Services.AddressService.AddressesDTO;
 namespace PruebaTecnicaZoco.Controllers
 {
     [ApiController]
-    [Route("api/Direcciones")]
+    [Route("api/Addresses")]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;

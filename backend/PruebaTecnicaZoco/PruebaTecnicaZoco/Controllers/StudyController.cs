@@ -7,7 +7,7 @@ using PruebaTecnicaZoco.Services.StudyService.StudiesDTO;
 namespace PruebaTecnicaZoco.Controllers
 {
     [ApiController]
-    [Route("api/Estudios")]
+    [Route("api/Studies")]
     public class StudyController : ControllerBase
     {
         private readonly IStudyService _studyService;

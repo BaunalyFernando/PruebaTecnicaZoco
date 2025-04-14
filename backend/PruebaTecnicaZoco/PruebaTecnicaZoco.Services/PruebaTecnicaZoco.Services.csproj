@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PruebaTecnicaZoco.Common\PruebaTecnicaZoco.Common.csproj" />
     <ProjectReference Include="..\PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj" />
   </ItemGroup>

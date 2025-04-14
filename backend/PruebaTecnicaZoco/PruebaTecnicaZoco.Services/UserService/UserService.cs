@@ -27,12 +27,23 @@ namespace PruebaTecnicaZoco.Services.UserService
                 throw new BadRequestException("Por favor ingrese todos los datos de los campos");
             }
 
+            var email = user.Email.ToLower();
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
+
+            if (existingUser != null)
+            {
+                throw new BadRequestException("Ya existe un usuario con este correo electrónico");
+            }
+
+            var hashedPassword = PasswordHasher.HashPassword(user.Password);
+
             var newUser = new User
             {
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
-                Email = user.Email,
-                Password = user.Password,
+                Email = email,
+                Password = hashedPassword,
                 Role = Role.User
             };
 
@@ -50,13 +61,24 @@ namespace PruebaTecnicaZoco.Services.UserService
                 throw new BadRequestException("Por favor ingrese todos los datos de los campos");
             }
 
+            var email = user.Email.ToLower();
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
+
+            if (existingUser != null)
+            {
+                throw new BadRequestException("Ya existe un usuario con este correo electrónico");
+            }
+
+            var hashedPassword = PasswordHasher.HashPassword(user.Password);
+
             var newUser = new User
             {
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
-                Email = user.Email,
-                Password = user.Password,
-                Role = user.Role
+                Email = email,
+                Password = hashedPassword,
+                Role = Role.User
             };
 
             _context.Users.Add(newUser);

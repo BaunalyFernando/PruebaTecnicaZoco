@@ -5,7 +5,7 @@ namespace PruebaTecnicaZoco.Services.LoginService
 {
     public interface ILoginService
     {
-        Task<bool> LoginAsync(SessionLogDTO session);
+        Task<bool> LoginAsync(SessionLog session);
         Task<bool> LogoutAsync(SessionLogDTO session);
     }
 }
