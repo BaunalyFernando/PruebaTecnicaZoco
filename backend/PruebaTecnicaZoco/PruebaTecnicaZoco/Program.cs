@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PruebaTecnicaZoco.Repository;
+using PruebaTecnicaZoco.Repository.Users;
 using PruebaTecnicaZoco.Services.AddressService;
 using PruebaTecnicaZoco.Services.LoginService;
 using PruebaTecnicaZoco.Services.StudyService;
@@ -111,6 +112,28 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    context.Database.Migrate();
+
+    if (!context.Users.Any())
+    {
+        var admin = new User
+        {
+            Nombre = "Admin",
+            Apellido = "Principal",
+            Email = "admin@admin.com",
+            Password = "admin1234",
+            Role = Role.Admin 
+        };
+
+        context.Users.Add(admin);
+        context.SaveChanges();
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
