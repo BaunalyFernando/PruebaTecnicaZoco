@@ -37,6 +37,16 @@ Este archivo debe incluir:
 
 Asegúrate de que tanto este appsettings.json como en el proyectos de DbContext estén correctamente configurados.
 
+Crear la base de datos
+
+Podés crear la base de datos de dos maneras:
+
+1. Usando Migraciones EF Core:
+   - Ejecutá `dotnet ef database update`
+
+2. Usando el script SQL generado:
+   - Archivo: `PruebaTecnicaZoco.Repository/Database/ScriptInicial.sql`
+   - Ejecutalo directamente en SQL Server o Azure Data Studio
 Abre la consola de Administrador de Paquetes en Visual Studio y ejecuta:
 Add-Migration InitialCreate
 Update-Database
