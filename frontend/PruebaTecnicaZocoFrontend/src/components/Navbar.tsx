@@ -1,13 +1,31 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../views/home/Home.module.css';
+import axios from 'axios';
 
 const Navbar = () => {
   const role = sessionStorage.getItem('role');
-  const navigate = useNavigate();
+  const userId = sessionStorage.getItem('userId');
+  const token = sessionStorage.getItem('token');
+
 
   const handleLogout = () => {
-    sessionStorage.clear();
-    navigate('/login');
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
+        { userId: parseInt(userId) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      .finally(() => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('role');
+        window.location.href = '/login';
+      });
   };
 
   return (
