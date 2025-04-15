@@ -49,6 +49,9 @@ Email: admin@admin.com
 Password: admin1234
 Esto para poder probar todas las funcionalidades de la app en modo Administrador. Tambien se puede crear un usuario normal registrandolo directamente desde la pantalla del login del frontend.
 
+IMPORTANTE
+Cuando quieras colocar el token en el Swagger, no hace falta agregar la palabra "Bearer" ya esta por defecto configurada, solo pega tu token y ya estaria configurado.
+
 Configuración del Frontend
 Ve al directorio del frontend (SPA con React).
 Crea un archivo .env y configura la URL del backend:
