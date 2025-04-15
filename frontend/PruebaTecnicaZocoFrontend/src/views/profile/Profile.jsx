@@ -160,7 +160,7 @@ const Profile = () => {
         <h1>Perfil de {user.nombre}</h1>
         <ul className={styles.list}>
           <li><strong>Email:</strong> {user.email}</li>
-          <li><strong>Rol:</strong> {user.role === 0 ? 'Usuario' : 'Administrador'}</li>
+          <li><strong>Rol:</strong> {user.role === 0 ? 'Administrador' : 'Usuario'}</li>
         </ul>
         <Link to={`/profile/edit`}>
           <button className={styles.editButton}>Editar datos personales</button>
