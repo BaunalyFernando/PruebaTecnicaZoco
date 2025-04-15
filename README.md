@@ -44,6 +44,10 @@ Update-Database
 Esto aplicará las migraciones y creará la base de datos en SQL Server.
 
 Ejecuta el proyecto backend (por defecto en http://localhost:5186).
+Al iniciar la aplicación por primera vez, se crea automáticamente un usuario administrador por defecto si no hay usuarios en la base.
+Email: admin@admin.com
+Password: admin1234
+Esto para poder probar todas las funcionalidades de la app en modo Administrador. Tambien se puede crear un usuario normal registrandolo directamente desde la pantalla del login del frontend.
 
 Configuración del Frontend
 Ve al directorio del frontend (SPA con React).
