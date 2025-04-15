@@ -25,8 +25,6 @@ project.fragment.lock.json
 .DS_Store
 Thumbs.db
 
-# Entity Framework
-Migrations/
 
 # Node / React (por si agregás el frontend después)
 node_modules/
