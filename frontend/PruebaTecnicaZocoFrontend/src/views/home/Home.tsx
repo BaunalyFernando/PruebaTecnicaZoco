@@ -1,53 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from '../../components/Navbar';
+import styles from './Home.module.css';
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const [studies, setStudies] = useState([]);
   const [addresses, setAddresses] = useState([]);
-  const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+  const token = sessionStorage.getItem('token');
+  const userId = sessionStorage.getItem('userId');
 
   useEffect(() => {
-    
-    console.log('TOKEN:', token);
-    console.log('USER ID:', userId);
-  
     if (!token) {
-      console.warn('No hay token, redirigiendo a login');
       window.location.href = '/login';
       return;
     }
-  
-    const config = {
-      headers: { Authorization: `Bearer ${token}` }
-    };
-  
+
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+
     axios
-      .get(`http://localhost:5186/api/users/${userId}`, config)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/${userId}`, config)
       .then(res => {
-        console.log('Usuario recibido:', res.data);
         setUser(res.data);
         fetchStudies(config);
         fetchAddresses(config);
       })
-      .catch(err => {
-        console.error('Error al obtener el usuario:', err.response?.status, err.response?.data || err);
+      .catch(() => {
         window.location.href = '/login';
       });
   }, []);
-  
 
   const fetchStudies = (config) => {
     axios
-      .get(`http://localhost:5186/api/studies/me`, config)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/studies/me`, config)
       .then(res => setStudies(res.data.$values))
       .catch(err => console.error('Error cargando estudios:', err));
   };
 
   const fetchAddresses = (config) => {
     axios
-      .get('http://localhost:5186/api/addresses/me', config)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/addresses/me`, config)
       .then(res => setAddresses(res.data.$values))
       .catch(err => console.error('Error cargando direcciones:', err));
   };
@@ -55,7 +47,7 @@ const Home = () => {
   const logout = () => {
     axios
       .post(
-        'http://localhost:5186/auth/logout',
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
         { userId: parseInt(userId) },
         {
           headers: {
@@ -65,50 +57,49 @@ const Home = () => {
         }
       )
       .finally(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('role');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('role');
         window.location.href = '/login';
       });
   };
 
-  if (!user) return <div>Cargando...</div>;
+  if (!user) return <div className={styles.container}>Cargando...</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>¡Hola, {user.nombre}!</h1>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Rol:</strong> {user.role === 0 ? "Usuario" : "Administrador"}</p>
+    <div className={styles.container}>
+      <Navbar />
+      <div className={styles.content}>
+        <h1>¡Hola, {user.nombre}!</h1>
+        <p><strong>Email:</strong> {user.email}</p>
+        <p><strong>Rol:</strong> {user.role === 0 ? "Administrador" : "Usuario"}</p>
 
-      <h2>Estudios</h2>
-      {studies.length === 0 ? (
-        <p>No tienes estudios cargados.</p>
-      ) : (
-        <ul>
-          {studies.map((study) => (
-            <li key={study.id}>
-              {study.nombre} - {study.descripcion}
-            </li>
-          ))}
-        </ul>
-      )}
+        <h2>Estudios</h2>
+        {studies.length === 0 ? (
+          <p>No tienes estudios cargados.</p>
+        ) : (
+          <ul className={styles.list}>
+            {studies.map((study) => (
+              <li key={study.id}>
+                {study.nombre} - {study.descripcion}
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <h2>Direcciones</h2>
-      {addresses.length === 0 ? (
-        <p>No tienes direcciones cargadas.</p>
-      ) : (
-        <ul>
-          {addresses.map((address) => (
-            <li key={address.id}>
-              {address.calle}, {address.ciudad}, {address.numero}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <button onClick={logout} style={{ marginTop: '20px' }}>
-        Cerrar sesión
-      </button>
+        <h2>Direcciones</h2>
+        {addresses.length === 0 ? (
+          <p>No tienes direcciones cargadas.</p>
+        ) : (
+          <ul className={styles.list}>
+            {addresses.map((address) => (
+              <li key={address.id}>
+                {address.calle}, {address.ciudad}, {address.numero}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

@@ -38,7 +38,7 @@ namespace PruebaTecnicaZoco.Controllers
         [Authorize]
         public async Task<IActionResult> GetStudyById(int id)
         {
-            var study = await _studyService.GetStudyByIdAsync(id);
+            var study = await _studyService.GetStudiesByUserIdAsync(id);
             return Ok(study);
         }
 

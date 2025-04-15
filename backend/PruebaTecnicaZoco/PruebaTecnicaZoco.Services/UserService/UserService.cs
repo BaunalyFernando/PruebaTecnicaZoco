@@ -146,6 +146,28 @@ namespace PruebaTecnicaZoco.Services.UserService
             return existingUser;
         }
 
+        public async Task<User> UpdateUserByAdminAsync(UserAdminDTO user)
+        {
+            if (user == null) throw new BadRequestException("Por favor ingrese un usuario válido");
+
+            var existingUser = await _context.Users.FindAsync(user.Id);
+            if (existingUser == null) throw new NotFoundException("Usuario no encontrado");
+
+            if (!IsAdmin() && existingUser.Id != GetCurrentUserId())
+                throw new UnauthorizedAccessException("No tiene permiso para editar este perfil.");
+
+            existingUser.Nombre = user.Nombre;
+            existingUser.Apellido = user.Apellido;
+            existingUser.Email = user.Email;
+            existingUser.Password = user.Password;
+            existingUser.Role = user.Role;
+
+            _context.Users.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            return existingUser;
+        }
+
         private int GetCurrentUserId()
         {
             return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);

@@ -9,6 +9,7 @@ namespace PruebaTecnicaZoco.Services.UserService
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(int id);
         Task<User> UpdateUserAsync(UserToModifyDTO user);
+        Task<User> UpdateUserByAdminAsync(UserAdminDTO user);
         Task<bool> DeleteUserAsync(int id);
     }
 }

@@ -3,7 +3,6 @@ import validateLogin from "./ValidateLogin";
 import styles from "./Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useContext } from "react";
 import axios from "axios";
 
 const Login = () => {
@@ -22,9 +21,9 @@ const Login = () => {
             console.log("Respuesta completa:", response);
             
             if (response && response.data && response.data.token) {
-                localStorage.setItem("token", response.data.token);
-                localStorage.setItem("role", response.data.role);
-                localStorage.setItem("userId", response.data.id);
+                sessionStorage.setItem("token", response.data.token);
+                sessionStorage.setItem("role", response.data.role);
+                sessionStorage.setItem("userId", response.data.id);
                 
                 Swal.fire({
                     icon: "success",

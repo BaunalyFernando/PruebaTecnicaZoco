@@ -57,7 +57,7 @@ namespace PruebaTecnicaZoco.Controllers
         {
             try
             {
-                var address = await _addressService.GetAddressByIdAsync(id);
+                var address = await _addressService.GetAddressesByUserIdAsync(id);
                 return Ok(address);
             }
             catch (Exception ex)

@@ -55,6 +55,14 @@ namespace PruebaTecnicaZoco.Controllers
             return Ok(updatedUser);
         }
 
+        [HttpPut("UpdateUserByAdmin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUserByAdmin([FromBody] UserAdminDTO user)
+        {
+            var updatedUser = await _userService.UpdateUserByAdminAsync(user);
+            return Ok(updatedUser);
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)

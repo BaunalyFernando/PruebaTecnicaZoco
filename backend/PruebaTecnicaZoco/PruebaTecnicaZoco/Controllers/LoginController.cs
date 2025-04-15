@@ -32,9 +32,9 @@ public class LoginController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDTO request)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
+            .FirstOrDefaultAsync(u => u.Email == request.Email.ToLower());
 
-        if (user == null)
+        if (user == null || !PasswordHasher.VerifyPassword(request.Password, user.Password))
         {
             throw new UnauthorizedException("Credenciales inválidas.");
         }
@@ -58,6 +58,7 @@ public class LoginController : ControllerBase
             role = user.Role.ToString()
         });
     }
+
 
 
     [HttpPost("logout")]
