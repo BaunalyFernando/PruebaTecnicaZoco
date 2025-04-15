@@ -113,5 +113,23 @@ namespace PruebaTecnicaZoco.Services.AddressService
         {
             return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
         }
+
+        public async Task<IEnumerable<Address>> GetAddressesByUserIdAsync(int userId)
+        {
+            var addresses = await _context.Addresses
+                .Where(a => a.UserId == userId)
+                .Select(a => new Address
+                {
+                    Id = a.Id,
+                    Calle = a.Calle,
+                    Numero = a.Numero,
+                    Ciudad = a.Ciudad,
+                    UserId = a.UserId
+                })
+                .ToListAsync();
+
+            return addresses;
+        }
+
     }
 }

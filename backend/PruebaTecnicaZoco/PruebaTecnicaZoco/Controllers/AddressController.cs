@@ -100,5 +100,15 @@ namespace PruebaTecnicaZoco.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMyAddresses()
+        {
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+            var addresses = await _addressService.GetAddressesByUserIdAsync(userId);
+            return Ok(addresses);
+        }
+
     }
 }

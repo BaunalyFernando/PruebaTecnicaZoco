@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #bdf2ff;
+    padding: 20px;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.title {
+    font-size: 2rem;
+    color: #007ab3;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.button {
+    background-color: #007ab3;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.button:hover {
+    background-color: #005f8a;
+}

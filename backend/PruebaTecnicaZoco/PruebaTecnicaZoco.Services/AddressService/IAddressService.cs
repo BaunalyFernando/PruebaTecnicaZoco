@@ -10,5 +10,7 @@ namespace PruebaTecnicaZoco.Services.AddressService
         Task<IEnumerable<Address>> GetAllAddressesAsync();
         Task<Address> UpdateAddressAsync(AddressModifyDTO address);
         Task<bool> DeleteAddressAsync(int id);
+
+        Task<IEnumerable<Address>> GetAddressesByUserIdAsync(int userId);
     }
 }

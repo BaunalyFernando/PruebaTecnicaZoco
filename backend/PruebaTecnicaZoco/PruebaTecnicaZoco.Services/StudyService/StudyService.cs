@@ -97,5 +97,22 @@ namespace PruebaTecnicaZoco.Services.StudyService
         {
             return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
         }
+
+        public async Task<IEnumerable<Study>> GetStudiesByUserIdAsync(int userId)
+        {
+            var studies = await _context.Studies
+                .Where(s => s.UserId == userId)
+                .Select(s => new Study
+                {
+                    Id = s.Id,
+                    Nombre = s.Nombre,
+                    Descripcion = s.Descripcion,
+                    UserId = s.UserId
+                })
+                .ToListAsync();
+
+            return studies;
+        }
+
     }
 }

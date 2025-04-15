@@ -11,5 +11,7 @@ namespace PruebaTecnicaZoco.Services.StudyService
         Task<Study> GetStudyByIdAsync(int id);
         Task<Study> UpdateStudyAsync(StudyModifyDTO study);
         Task<bool> DeleteStudyAsync(int id);
+
+        Task<IEnumerable<Study>> GetStudiesByUserIdAsync(int userId);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaZoco.Services.StudyService;
 using PruebaTecnicaZoco.Services.StudyService.StudiesDto;
 using PruebaTecnicaZoco.Services.StudyService.StudiesDTO;
+using System.Security.Claims;
 
 namespace PruebaTecnicaZoco.Controllers
 {
@@ -55,6 +56,15 @@ namespace PruebaTecnicaZoco.Controllers
         {
             await _studyService.DeleteStudyAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMyStudies()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var studies = await _studyService.GetStudiesByUserIdAsync(userId);
+            return Ok(studies);
         }
     }
 }
