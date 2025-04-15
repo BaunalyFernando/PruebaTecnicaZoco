@@ -44,7 +44,25 @@ const Home = () => {
       .catch(err => console.error('Error cargando direcciones:', err));
   };
 
-  
+  const logout = () => {
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
+        { userId: parseInt(userId) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      .finally(() => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('role');
+        window.location.href = '/login';
+      });
+  };
 
   if (!user) return <div className={styles.container}>Cargando...</div>;
 
