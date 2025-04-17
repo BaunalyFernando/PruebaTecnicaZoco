@@ -5,7 +5,7 @@ import styles from '../home/Home.module.css';
 import Navbar from '../../components/Navbar';
 
 const EditProfile = () => {
-  const [userData, setUserData] = useState({ nombre: '', apellido: '', email: '', password: '' });
+  const [userData, setUserData] = useState({ nombre: '', apellido: '', email: '', password: '', dni: '' });
   const token = sessionStorage.getItem('token');
   const userId = sessionStorage.getItem('userId');
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ const EditProfile = () => {
           apellido: res.data.apellido || '',
           email: res.data.email || '',
           password: res.data.password || '',
+          dni: res.data.dni || '',
         });
       })
       .catch(err => console.error(err));
@@ -80,6 +81,15 @@ const EditProfile = () => {
             type="email"
             name="email"
             value={userData.email}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Dni:</label>
+          <input
+            type="text"
+            name="dni"
+            value={userData.dni}
             onChange={handleChange}
             required
           />

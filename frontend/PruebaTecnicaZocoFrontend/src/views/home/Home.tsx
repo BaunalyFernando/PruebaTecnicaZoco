@@ -54,6 +54,7 @@ const Home = () => {
       <div className={styles.content}>
         <h1>¡Hola, {user.nombre}!</h1>
         <p><strong>Email:</strong> {user.email}</p>
+        <p><strong>Dni:</strong> {user.dni}</p>
         <p><strong>Rol:</strong> {user.role === 0 ? "Administrador" : "Usuario"}</p>
 
         <h2>Estudios</h2>

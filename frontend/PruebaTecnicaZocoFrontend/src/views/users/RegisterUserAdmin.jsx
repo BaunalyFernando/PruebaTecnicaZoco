@@ -11,6 +11,7 @@ const RegisterUserAdmin = () => {
     apellido: '',
     email: '',
     password: '',
+    dni: '',
     role: 0,
   });
 
@@ -38,6 +39,7 @@ const RegisterUserAdmin = () => {
       apellido: form.apellido,
       email: form.email,
       password: form.password,
+      dni: form.dni,
       role: parseInt(form.role) 
     };
 
@@ -86,6 +88,14 @@ const RegisterUserAdmin = () => {
               name="email"
               placeholder="Correo electrónico"
               value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="dni"
+              name="dni"
+              placeholder="Dni"
+              value={form.dni}
               onChange={handleChange}
               required
             />

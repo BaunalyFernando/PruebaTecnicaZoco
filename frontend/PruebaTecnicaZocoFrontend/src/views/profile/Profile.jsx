@@ -160,6 +160,7 @@ const Profile = () => {
         <h1>Perfil de {user.nombre}</h1>
         <ul className={styles.list}>
           <li><strong>Email:</strong> {user.email}</li>
+          <li><strong>Dni:</strong> {user.dni}</li>
           <li><strong>Rol:</strong> {user.role === 0 ? 'Usuario' : 'Administrador'}</li>
         </ul>
         <Link to={`/profile/edit`}>

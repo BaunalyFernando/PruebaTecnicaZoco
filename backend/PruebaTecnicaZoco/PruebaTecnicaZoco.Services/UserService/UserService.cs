@@ -44,6 +44,7 @@ namespace PruebaTecnicaZoco.Services.UserService
                 Apellido = user.Apellido,
                 Email = email,
                 Password = hashedPassword,
+                Dni = user.Dni,
                 Role = Role.User
             };
 
@@ -78,6 +79,7 @@ namespace PruebaTecnicaZoco.Services.UserService
                 Apellido = user.Apellido,
                 Email = email,
                 Password = hashedPassword,
+                Dni = user.Dni,
                 Role = Role.User
             };
 
@@ -138,6 +140,7 @@ namespace PruebaTecnicaZoco.Services.UserService
             existingUser.Nombre = user.Nombre;
             existingUser.Apellido = user.Apellido;
             existingUser.Email = user.Email;
+            existingUser.Dni = user.Dni;
             existingUser.Password = user.Password;
 
             _context.Users.Update(existingUser);
@@ -160,6 +163,7 @@ namespace PruebaTecnicaZoco.Services.UserService
             existingUser.Apellido = user.Apellido;
             existingUser.Email = user.Email;
             existingUser.Password = user.Password;
+            existingUser.Dni = user.Dni;
             existingUser.Role = user.Role;
 
             _context.Users.Update(existingUser);

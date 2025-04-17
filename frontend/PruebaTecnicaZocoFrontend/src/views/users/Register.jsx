@@ -11,6 +11,7 @@ const Register = () => {
     apellido: '',
     email: '',
     password: '',
+    dni: ''
   });
 
   const [error, setError] = useState('');
@@ -68,6 +69,14 @@ const Register = () => {
               name="email"
               placeholder="Correo electrónico"
               value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="dni"
+              name="dni"
+              placeholder="Dni"
+              value={form.dni}
               onChange={handleChange}
               required
             />
