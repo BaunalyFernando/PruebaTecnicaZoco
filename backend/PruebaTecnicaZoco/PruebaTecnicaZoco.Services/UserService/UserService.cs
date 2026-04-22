@@ -137,6 +137,11 @@ namespace PruebaTecnicaZoco.Services.UserService
             if (!IsAdmin() && existingUser.Id != GetCurrentUserId())
                 throw new UnauthorizedAccessException("No tiene permiso para editar este perfil.");
 
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                existingUser.Password = PasswordHasher.HashPassword(user.Password);
+            }
+
             existingUser.Nombre = user.Nombre;
             existingUser.Apellido = user.Apellido;
             existingUser.Email = user.Email;

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PruebaTecnicaZoco.Common.Jwt;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Users;
 using PruebaTecnicaZoco.Services.AddressService;
@@ -9,18 +10,20 @@ using PruebaTecnicaZoco.Services.LoginService;
 using PruebaTecnicaZoco.Services.StudyService;
 using PruebaTecnicaZoco.Services.UserService;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtSettings = new JwtSettings();
+builder.Configuration.GetSection("Jwt").Bind(jwtSettings);
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt"));
+
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
-byte[] keyBytes;
-keyBytes = Encoding.UTF8.GetBytes(jwtKey);
-
+var keyBytes = Encoding.UTF8.GetBytes(jwtSettings.Key);
 var securityKey = new SymmetricSecurityKey(keyBytes);
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -54,8 +57,11 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
+            var logger = context.HttpContext.RequestServices
+            .GetRequiredService<ILogger<Program>>();
+
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            Console.WriteLine($"Token recibido: {token ?? "ninguno"}");
+            logger.LogInformation($"Token recibido: {token ?? "ninguno"}");
             return Task.CompletedTask;
         },
         OnAuthenticationFailed = context =>
@@ -126,7 +132,7 @@ using (var scope = app.Services.CreateScope())
             Nombre = "Admin",
             Apellido = "Principal",
             Email = "admin@admin.com",
-            Password = "admin1234",
+            Password = PasswordHasher.HashPassword("admin1234"),
             Role = Role.Admin 
         };
 
