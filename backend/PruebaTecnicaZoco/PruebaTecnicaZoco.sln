@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35312.102
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11716.220 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaTecnicaZoco", "PruebaTecnicaZoco\PruebaTecnicaZoco.csproj", "{1D2C3B9A-EFA1-4B97-B078-11CCDE79A061}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaTecnicaZoco.Repository", "PruebaTecnicaZoco.Repository\PruebaTecnicaZoco.Repository.csproj", "{F41038C7-56C0-4222-8C43-589A717A7CF1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Common", "PruebaTecnicaZoco.Common\PruebaTecnicaZoco.Common.csproj", "{EEECAE78-430F-4B24-A39C-C47F0F78D918}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaTecnicaZoco.Tests", "PruebaTecnicaZoco.Tests\PruebaTecnicaZoco.Tests.csproj", "{F87B644C-D1AF-40A0-85AD-07147081EBC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEECAE78-430F-4B24-A39C-C47F0F78D918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87B644C-D1AF-40A0-85AD-07147081EBC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F87B644C-D1AF-40A0-85AD-07147081EBC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F87B644C-D1AF-40A0-85AD-07147081EBC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F87B644C-D1AF-40A0-85AD-07147081EBC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PruebaTecnicaZoco.Common.Exceptions;
 using PruebaTecnicaZoco.Repository;
 using PruebaTecnicaZoco.Repository.Users;
 using PruebaTecnicaZoco.Services.UserService.UserDTO;
-using System.Security.Claims;
 
 namespace PruebaTecnicaZoco.Services.UserService
 {
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly ICurrentUserService _currentUser;
+
+        public UserService(AppDbContext context, ICurrentUserService currentUser)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _currentUser = currentUser;
         }
 
         public async Task<User> CreateUser(UserNormalDTO user)
@@ -29,12 +28,7 @@ namespace PruebaTecnicaZoco.Services.UserService
 
             var email = user.Email.ToLower();
 
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
-
-            if (existingUser != null)
-            {
-                throw new BadRequestException("Ya existe un usuario con este correo electrónico");
-            }
+            await ValidateUserData(email);
 
             var hashedPassword = PasswordHasher.HashPassword(user.Password);
 
@@ -62,14 +56,7 @@ namespace PruebaTecnicaZoco.Services.UserService
                 throw new BadRequestException("Por favor ingrese todos los datos de los campos");
             }
 
-            var email = user.Email.ToLower();
-
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
-
-            if (existingUser != null)
-            {
-                throw new BadRequestException("Ya existe un usuario con este correo electrónico");
-            }
+            await ValidateUserData(user.Email);
 
             var hashedPassword = PasswordHasher.HashPassword(user.Password);
 
@@ -77,7 +64,7 @@ namespace PruebaTecnicaZoco.Services.UserService
             {
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
-                Email = email,
+                Email = user.Email.ToLower(),
                 Password = hashedPassword,
                 Dni = user.Dni,
                 Role = Role.User
@@ -93,10 +80,10 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             if (id <= 0) throw new BadRequestException("Por favor ingrese un ID válido");
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await GetUserOrThrow(id);
             if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
-            if (!IsAdmin() && user.Id != GetCurrentUserId())
+            if (!_currentUser.IsAdmin && user.Id != _currentUser.UserId)
                 throw new UnauthorizedAccessException("No tiene permiso para eliminar este perfil.");
 
             _context.Users.Remove(user);
@@ -108,10 +95,10 @@ namespace PruebaTecnicaZoco.Services.UserService
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            if (!IsAdmin())
+            if (!_currentUser.IsAdmin)
                 throw new UnauthorizedAccessException("Solo los administradores pueden ver todos los usuarios.");
 
-            return await _context.Users.ToListAsync();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User> GetUserByIdAsync(int id)
@@ -121,7 +108,7 @@ namespace PruebaTecnicaZoco.Services.UserService
             var user = await _context.Users.FindAsync(id);
             if (user == null) throw new NotFoundException("No se ha encontrado el usuario");
 
-            if (!IsAdmin() && user.Id != GetCurrentUserId())
+            if (!_currentUser.IsAdmin && user.Id != _currentUser.UserId)
                 throw new UnauthorizedAccessException("No tiene permiso para acceder a este perfil.");
 
             return user;
@@ -131,22 +118,25 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             if (user == null) throw new BadRequestException("Por favor ingrese un usuario válido");
 
-            var existingUser = await _context.Users.FindAsync(user.Id);
-            if (existingUser == null) throw new NotFoundException("Usuario no encontrado");
+            var existingUser = await GetUserOrThrow(user.Id);
 
-            if (!IsAdmin() && existingUser.Id != GetCurrentUserId())
+            if (!_currentUser.IsAdmin && existingUser.Id != _currentUser.UserId)
                 throw new UnauthorizedAccessException("No tiene permiso para editar este perfil.");
 
-            if (!string.IsNullOrEmpty(user.Password))
-            {
-                existingUser.Password = PasswordHasher.HashPassword(user.Password);
-            }
+            if (!string.IsNullOrEmpty(user.Nombre))
+                existingUser.Nombre = user.Nombre;
 
-            existingUser.Nombre = user.Nombre;
-            existingUser.Apellido = user.Apellido;
-            existingUser.Email = user.Email;
-            existingUser.Dni = user.Dni;
-            existingUser.Password = user.Password;
+            if (!string.IsNullOrEmpty(user.Password))
+                existingUser.Password = PasswordHasher.HashPassword(user.Password);
+
+            if (!string.IsNullOrEmpty(user.Email))
+                existingUser.Email = user.Email.ToLower();
+
+            if (!string.IsNullOrEmpty(user.Apellido))
+                existingUser.Apellido = user.Apellido;
+
+            if (!string.IsNullOrEmpty(user.Dni))
+                existingUser.Dni = user.Dni;
 
             _context.Users.Update(existingUser);
             await _context.SaveChangesAsync();
@@ -158,34 +148,46 @@ namespace PruebaTecnicaZoco.Services.UserService
         {
             if (user == null) throw new BadRequestException("Por favor ingrese un usuario válido");
 
-            var existingUser = await _context.Users.FindAsync(user.Id);
+            var existingUser = await GetUserOrThrow(user.Id);
             if (existingUser == null) throw new NotFoundException("Usuario no encontrado");
 
-            if (!IsAdmin() && existingUser.Id != GetCurrentUserId())
+            if (!_currentUser.IsAdmin && existingUser.Id != _currentUser.UserId)
                 throw new UnauthorizedAccessException("No tiene permiso para editar este perfil.");
 
-            existingUser.Nombre = user.Nombre;
-            existingUser.Apellido = user.Apellido;
-            existingUser.Email = user.Email;
-            existingUser.Password = user.Password;
-            existingUser.Dni = user.Dni;
+            if (!string.IsNullOrEmpty(user.Password))
+                existingUser.Password = PasswordHasher.HashPassword(user.Password);
+
+            if (!string.IsNullOrEmpty(user.Apellido))
+                existingUser.Apellido = user.Apellido;
+
+            if (!string.IsNullOrEmpty(user.Dni))
+                existingUser.Dni = user.Dni;
+
+            if (!string.IsNullOrEmpty(user.Nombre))
+                existingUser.Nombre = user.Nombre;
+
+            if (!string.IsNullOrEmpty(user.Email))
+                existingUser.Email = user.Email.ToLower();
+
             existingUser.Role = user.Role;
 
-            _context.Users.Update(existingUser);
             await _context.SaveChangesAsync();
 
             return existingUser;
         }
-
-        private int GetCurrentUserId()
+        private async Task ValidateUserData(string email)
         {
-            return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var exists = await _context.Users.AnyAsync(u => u.Email == email);
+            if (exists)
+                throw new BadRequestException("Ya existe un usuario...");
         }
-
-        private bool IsAdmin()
+        private async Task<User> GetUserOrThrow(int id)
         {
-            return _httpContextAccessor.HttpContext!.User.IsInRole("Admin");
-        }
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                throw new NotFoundException("Usuario no encontrado");
 
+            return user;
+        }
     }
 }
