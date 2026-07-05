@@ -30,6 +30,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudyService, StudyService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
@@ -133,6 +134,7 @@ using (var scope = app.Services.CreateScope())
             Apellido = "Principal",
             Email = "admin@admin.com",
             Password = PasswordHasher.HashPassword("admin1234"),
+            Dni = "1234",
             Role = Role.Admin 
         };
 
